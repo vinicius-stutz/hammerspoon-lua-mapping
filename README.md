@@ -61,5 +61,5 @@ As mudanças acima tornaram o meu script do Hammerspoon mais eficiente, com tecl
 
 Esta estrutura modular também facilita compartilhar as configurações ou reutilizá-las em diferentes ambientes, já que cada componente é independente e auto-contido.
 
---
+---
 Ref.: www.hammerspoon.org
