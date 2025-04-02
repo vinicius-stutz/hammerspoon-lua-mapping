@@ -8,7 +8,7 @@ Start browsing my code [here (init.lua file)](https://github.com/vinicius-stutz/
 **Note**: The documentation is written in PT-BR because I haven't had time to translate everything I've written yet 🤷🏻‍♂️
 
 ## Propósito
-Migrei para macOS após mais de 20 anos entre Linux e Windows. Como ainda uso muito Windows em meu dia-a-dia, não me adaptei facilmente às combinações de teclas para atalhos do macOS, então resolvi construir minhas prórpias combinações e, de quebra, algumas outras coisas legais com o Hammerspoon. ☺️
+Passei a usar macOS após mais de 20 anos entre sistemas operacionais Linux e Windows. Como ainda uso muito Windows em meu dia-a-dia, não me adaptei facilmente às combinações de teclas para atalhos do macOS, então resolvi construir minhas próprias combinações e, de quebra, algumas outras coisas legais com o Hammerspoon. ☺️
 
 Não foi uma questão de certo ou errado, apenas uma questão daquilo que funciona para minha necessidade.
 
