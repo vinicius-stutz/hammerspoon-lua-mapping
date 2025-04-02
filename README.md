@@ -1,9 +1,16 @@
-# Hammerspoon LUA mapping
-Custom macOS lua scripts for [Hammerspoon](https://github.com/Hammerspoon/hammerspoon) - mapping keys like Windows/Linux!
+# 🔨 Hammerspoon 🌙 LUA mapping
+Custom macOS lua scripts for [Hammerspoon](http://www.hammerspoon.org) - mapping keys like Windows/Linux!
 
-See my lua code [here](https://github.com/vinicius-stutz/hammerspoon-lua-mapping/blob/master/init.lua).
+[![Hammerspoon](https://img.shields.io/badge/Hammerspoon-Automation-yellow?style=plastic)](https://github.com/Hammerspoon/hammerspoon) [![Lua](https://img.shields.io/badge/Made_with_Lua-2C2D72?style=plastic&logo=lua&logoColor=white)](https://www.lua.org/portugues.html)
 
-See more configurations [here](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations).
+Start browsing my code [here (init.lua file)](https://github.com/vinicius-stutz/hammerspoon-lua-mapping/blob/master/init.lua). See more configurations later [here](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations).
+
+**Note**: The documentation is written in PT-BR because I haven't had time to translate everything I've written yet 🤷🏻‍♂️
+
+## Propósito
+Migrei para macOS após mais de 20 anos entre Linux e Windows. Como ainda uso muito Windows em meu dia-a-dia, não me adaptei facilmente às combinações de teclas para atalhos do macOS, então resolvi construir minhas prórpias combinações e, de quebra, algumas outras coisas legais com o Hammerspoon. ☺️
+
+Não foi uma questão de certo ou errado, apenas uma questão daquilo que funciona para minha necessidade.
 
 ## Estrutura de diretórios adotada
 
@@ -60,6 +67,3 @@ As mudanças acima tornaram o meu script do Hammerspoon mais eficiente, com tecl
 - Facilidade de depuração: Se algo der errado, é mais fácil identificar qual módulo está causando problema.
 
 Esta estrutura modular também facilita compartilhar as configurações ou reutilizá-las em diferentes ambientes, já que cada componente é independente e auto-contido.
-
----
-Ref.: www.hammerspoon.org
