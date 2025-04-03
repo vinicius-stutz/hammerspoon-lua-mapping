@@ -22,7 +22,7 @@ function safari.setupSafariHotkeys(app, state)
                 hs.alert.show("Tradução PT-BR em andamento…", config.alertStyle, 1)
             end),
             
-            hs.hotkey.bind({"cmd", "shift"}, "t", function()
+            hs.hotkey.bind({"cmd", "shift"}, "o", function()
                 app:selectMenuItem({"Visualizar", "Tradução", "Ver Original"})
                 hs.alert.show("Voltando ao idioma original…", config.alertStyle, 1)
             end),

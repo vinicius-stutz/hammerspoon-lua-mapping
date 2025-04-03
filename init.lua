@@ -5,6 +5,7 @@ local config = require("config")
 
 -- Carregar bibliotecas utilitárias
 local keyboard = require("lib.keyboard")
+local mouse = require("lib.mouse")
 local window = require("lib.window")
 
 -- Carregar configurações específicas de aplicativos
@@ -30,6 +31,12 @@ local function applicationWatcher(appName, eventType, app)
     elseif appName == "Mail" then
         mailConfig.handleMailEvents(appName, eventType, app, state)
     end
+
+    if appName ~= "Finder" then
+        if keyCode == config.KEY.ENTER then -- ENTER/RETURN
+            return false
+        end
+    end
 end
 
 -- Inicialização do sistema
@@ -54,20 +61,7 @@ local function init()
     keyboard.setupCtrlArrowWatcher()
     
     -- Notificar inicialização
-    hs.alert.show("Seja bem-vindo(a), " .. config.userName .. "!\nSeus scripts Hammerspoon foram carregados com sucesso!",
-    {
-        strokeWidth  = 0.12,
-        strokeColor = { white = 1, alpha = 1 },
-        fillColor   = { white = 0.12, alpha = 0.8 },
-        textColor = { white = 1, alpha = 1 },
-        textFont  = ".AppleSystemUIFont",
-        textSize  = 13,
-        radius = 6,
-        atScreenEdge = 0,
-        fadeInDuration = 0.15,
-        fadeOutDuration = 0.15,
-        padding = 16,
-    }, 6)
+    hs.alert.show("Seja bem-vindo(a), " .. config.userName .. "!\nSeus scripts Hammerspoon foram carregados com sucesso!", config.alertStyle, 6)
 end
 
 -- Iniciar o sistema

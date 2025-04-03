@@ -26,8 +26,51 @@ function keyboard.setupSystemShortcuts()
     -- Fechar aba/janela (Ctrl+F4)
     hs.hotkey.bind({"ctrl"}, "f4", nil, function()
         local win = hs.window.focusedWindow()
-        if win then win:close() end
+        if not win then return end
+        
+        local app = win:application()
+        local appName = app:name()
+        
+        -- Lista de aplicativos que sabemos usar abas
+        local tabApps = {
+            ["Google Chrome"] = true,
+            ["Safari"] = true,
+            ["Firefox"] = true,
+            ["Finder"] = true,
+            ["Terminal"] = true,
+            ["iTerm2"] = true,
+        }
+        
+        -- Lista de aplicativos onde precisamos ser cuidadosos
+        local sensitiveApps = {
+            ["TextEdit"] = true,
+            ["Microsoft Word"] = true,
+            ["Visual Studio Code"] = true,
+            ["Sublime Text"] = true
+        }
+        
+        if tabApps[appName] then
+            -- Para navegadores e aplicativos que sabemos que usam abas
+            hs.eventtap.keyStroke({"cmd"}, "w")
+        elseif sensitiveApps[appName] then
+            -- Para aplicativos sensíveis, perguntamos antes
+            local button = hs.dialog.blockAlert(
+                "Fechar aba/documento",
+                "Deseja fechar este documento em " .. appName .. "?",
+                "Cancelar", "Fechar"
+            )
+            if button == "Fechar" then
+                hs.eventtap.keyStroke({"cmd"}, "w")
+            end
+        else
+            win:close()
+        end
     end)
+    -- hs.hotkey.bind({"ctrl"}, "f4", nil, function()
+    --     local win = hs.window.focusedWindow()
+    --     if win then win:close() end
+    -- end)
+
     
     -- Abrir Launchpad (Ctrl+Esc)
     hs.hotkey.bind({"ctrl"}, config.KEY.ESC, function() 
@@ -67,8 +110,7 @@ function keyboard.createShortcuts()
     
     -- Teclas a desabilitar
     local disableKeys = {
-        {{"cmd"}, "q"},
-        {{"cmd"}, "w"}
+        {{"cmd"}, "q"}
     }
 
     -- Remapeamento Ctrl para Cmd
