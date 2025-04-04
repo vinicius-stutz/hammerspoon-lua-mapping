@@ -20,6 +20,7 @@ Não foi uma questão de certo ou errado, apenas uma questão daquilo que funcio
 -- ├── config.lua                 (configurações globais)
 -- ├── lib/                       (funções utilitárias)
 -- │   ├── keyboard.lua           (funções de teclado)
+-- │   ├── mouse.lua              (funções do mouse)
 -- │   └── window.lua             (funções de janela)
 -- └── apps/                      (configurações específicas de apps)
 --     ├── finder.lua
