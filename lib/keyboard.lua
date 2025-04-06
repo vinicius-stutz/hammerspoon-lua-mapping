@@ -122,6 +122,7 @@ function keyboard.createShortcuts()
     local specialCases = {
         {{"ctrl"}, "y", {"cmd", "shift"}, "z"},          -- Refazer
         {{"ctrl", "shift"}, "t", {"cmd", "shift"}, "t"}, -- Restaurar aba
+        {{"ctrl", "shift"}, "p", {"cmd", "shift"}, "p"}, -- Normalmente, abre a barra de comandos em apps
         {{"alt"}, "l", {"cmd", "ctrl"}, "q"},            -- Bloquear tela
         {{"ctrl"}, "d", {"cmd", "shift"}, "d"},          -- Duplicar linha
         {{"ctrl", "shift"}, "v", {"cmd", "shift"}, "v"}  -- Colar sem formatação
