@@ -1,7 +1,11 @@
+--[[
+--Copyright (c) 2025 vinici.us.com. All Rights Reserved.
+--Licensed under the MIT license.
+--]]
+
 -- mail.lua: Configurações específicas para o Mail
 
 local mail = {}
-local config = require("config")
 
 -- Processa eventos do Mail
 function mail.handleMailEvents(appName, eventType, app, state)
@@ -15,23 +19,23 @@ end
 -- Configurar atalhos do Mail
 function mail.setupMailHotkeys(app, state)
     state.appleMailHotkeys = {
-        hs.hotkey.bind({"ctrl"}, "m", function()
-            app:selectMenuItem({"Mensagem", "Mover para"})
-            
+        hs.hotkey.bind({ "ctrl" }, "m", function()
+            app:selectMenuItem({ "Mensagem", "Mover para" })
+
             -- Sequência otimizada de navegação
             local keys = {
-                "m", "m", "m", "right", 
+                "m", "m", "m", "right",
                 "down", "down", "down", "down", "down", "down"
             }
-            
+
             -- Executar sequência com intervalo pequeno
             for _, key in ipairs(keys) do
                 hs.eventtap.keyStroke({}, key, 0.2)
             end
         end),
-        
-        hs.hotkey.bind({"ctrl"}, "space", function()
-            hs.eventtap.keyStroke({"shift", "cmd"}, "u", 0)
+
+        hs.hotkey.bind({ "ctrl" }, "space", function()
+            hs.eventtap.keyStroke({ "shift", "cmd" }, "u", 0)
         end)
     }
 end

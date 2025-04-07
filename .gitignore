@@ -1,3 +1,6 @@
+# Copyright (c) 2025 vinici.us.com. All Rights Reserved.
+# Licensed under the MIT license.
+
 # Compiled Lua sources
 luac.out
 
@@ -41,4 +44,5 @@ luac.out
 
 .DS_Store
 .old
+.sublime-workspace
 .sublime-project

@@ -1,3 +1,8 @@
+--[[
+--Copyright (c) 2025 vinici.us.com. All Rights Reserved.
+--Licensed under the MIT license.
+--]]
+
 -- keyboard.lua: Funções relacionadas a eventos de teclado
 
 local keyboard = {}
@@ -39,14 +44,14 @@ function keyboard.setupSystemShortcuts()
             ["Finder"] = true,
             ["Terminal"] = true,
             ["iTerm2"] = true,
+            ["Visual Studio Code"] = true,
+            ["Sublime Text"] = true
         }
         
         -- Lista de aplicativos onde precisamos ser cuidadosos
         local sensitiveApps = {
             ["TextEdit"] = true,
-            ["Microsoft Word"] = true,
-            ["Visual Studio Code"] = true,
-            ["Sublime Text"] = true
+            ["Microsoft Word"] = true
         }
         
         if tabApps[appName] then

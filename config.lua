@@ -1,3 +1,8 @@
+--[[
+--Copyright (c) 2025 vinici.us.com. All Rights Reserved.
+--Licensed under the MIT license.
+--]]
+
 -- config.lua: Configurações globais e constantes
 
 local config = {}
@@ -25,17 +30,17 @@ config.keyMapping = {
 }
 
 config.alertStyle = {
-    strokeWidth  = 0.12,
-    strokeColor = { white = 1, alpha = 1 },
-    fillColor   = { white = 0.12, alpha = 0.8 },
-    textColor = { white = 1, alpha = 1 },
-    textFont  = ".AppleSystemUIFont",
-    textSize  = 13,
-    radius = 6,
-    atScreenEdge = 0,
-    fadeInDuration = 0.15,
+    strokeWidth     = 0.12,
+    strokeColor     = { white = 1, alpha = 1 },
+    fillColor       = { white = 0.12, alpha = 0.8 },
+    textColor       = { white = 1, alpha = 1 },
+    textFont        = ".AppleSystemUIFont",
+    textSize        = 13,
+    radius          = 6,
+    atScreenEdge    = 0,
+    fadeInDuration  = 0.15,
     fadeOutDuration = 0.15,
-    padding = 16,
+    padding         = 16,
 }
 
 -- Configurações de performance

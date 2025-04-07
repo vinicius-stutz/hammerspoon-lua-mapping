@@ -1,3 +1,8 @@
+--[[
+--Copyright (c) 2025 vinici.us.com. All Rights Reserved.
+--Licensed under the MIT license.
+--]]
+
 -- mouse.lua: Funções relacionadas a eventos do mouse
 
 local mouse = {}
@@ -61,9 +66,6 @@ function mouse.toggleModifierSwap()
         return mouse.startModifierSwap()
     end
 end
-
--- Inicia o swapper automaticamente quando o módulo é carregado
-mouse.startModifierSwap()
 
 -- Retorna o módulo
 return mouse
