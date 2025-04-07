@@ -44,5 +44,6 @@ luac.out
 
 .DS_Store
 .old
-.sublime-workspace
-.sublime-project
+*.sublime-workspace
+*.sublime-project
+*.sublime-workspace
