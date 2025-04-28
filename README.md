@@ -36,9 +36,9 @@ Com a finalidade de evitar muitos remapeamentos, sugiro seguir os seguintes pass
 3. Clicar em "Atalhos de Teclado…";
 4. Teclas Modificadoras;
 5. Selecione o seu teclado preferido e troque:
-   a. Tecla Control (^) => ⌘ Command;
-   b. Tecla Option (⌥) => ^ Control;
-   c. Tecla Command (⌘) => ⌥ Option.
+   1. Tecla Control (^) => ⌘ Command;
+   2. Tecla Option (⌥) => ^ Control;
+   3. Tecla Command (⌘) => ⌥ Option.
 
 Desta forma:
 
