@@ -5,21 +5,24 @@
 
 -- mail.lua: Configurações específicas para o Mail
 
+local config = require("config")
 local mail = {}
 
 -- Processa eventos do Mail
-function mail.handleMailEvents(appName, eventType, app, state)
+function mail.handleEvents(appName, eventType, app, state)
     if eventType == hs.application.watcher.activated then
-        mail.setupMailHotkeys(app, state)
+        print("-- Configurando atalhos de teclado do " .. appName)
+        mail.setupHotkeys(app, state)
     elseif eventType == hs.application.watcher.deactivated then
-        mail.clearMailHotkeys(state)
+        print("-- O " .. appName .. " foi desativado")
+        mail.clearHotkeys(state)
     end
 end
 
 -- Configurar atalhos do Mail
-function mail.setupMailHotkeys(app, state)
+function mail.setupHotkeys(app, state)
     state.appleMailHotkeys = {
-        hs.hotkey.bind({ "ctrl" }, "m", function()
+        hs.hotkey.bind({ config.Key.CTRL }, "m", function()
             app:selectMenuItem({ "Mensagem", "Mover para" })
 
             -- Sequência otimizada de navegação
@@ -34,14 +37,14 @@ function mail.setupMailHotkeys(app, state)
             end
         end),
 
-        hs.hotkey.bind({ "ctrl" }, "space", function()
+        hs.hotkey.bind({ config.Key.CTRL }, "space", function()
             hs.eventtap.keyStroke({ "shift", "cmd" }, "u", 0)
         end)
     }
 end
 
 -- Limpar atalhos do Mail
-function mail.clearMailHotkeys(state)
+function mail.clearHotkeys(state)
     if state.appleMailHotkeys then
         for _, hotkey in pairs(state.appleMailHotkeys) do
             if hotkey and type(hotkey.delete) == "function" then

@@ -9,35 +9,37 @@ local safari = {}
 local config = require("config")
 
 -- Processa eventos do Safari
-function safari.handleSafariEvents(appName, eventType, app, state)
+function safari.handleEvents(appName, eventType, app, state)
     if eventType == hs.application.watcher.activated then
-        safari.setupSafariHotkeys(app, state)
+        print("-- Configurando atalhos de teclado do " .. appName)
+        safari.setupHotkeys(app, state)
     elseif eventType == hs.application.watcher.deactivated then
-        safari.clearSafariHotkeys(state)
+        print("-- O " .. appName .. " foi desativado")
+        safari.clearHotkeys(state)
     end
 end
 
 -- Configurar atalhos do Safari
-function safari.setupSafariHotkeys(app, state)
+function safari.setupHotkeys(app, state)
     if not state.safariHotkeys or #state.safariHotkeys == 0 then
         state.safariHotkeys = {
             -- Atalhos de tradução
-            hs.hotkey.bind({ "cmd", "shift" }, "p", function()
+            hs.hotkey.bind({ config.Key.ALT, config.Key.SHIFT }, "p", function()
                 app:selectMenuItem({ "Visualizar", "Tradução", "Traduzir para Português" })
-                hs.alert.show("Tradução PT-BR em andamento…", config.alertStyle, 1)
+                hs.alert.show("Tradução PT-BR em andamento…", config.AlertStyle, 1)
             end),
 
-            hs.hotkey.bind({ "cmd", "shift" }, "o", function()
+            hs.hotkey.bind({ config.Key.ALT, config.Key.SHIFT }, "o", function()
                 app:selectMenuItem({ "Visualizar", "Tradução", "Ver Original" })
-                hs.alert.show("Voltando ao idioma original…", config.alertStyle, 1)
+                hs.alert.show("Voltando ao idioma original…", config.AlertStyle, 1)
             end),
 
             -- Atalhos de desenvolvedor
-            hs.hotkey.bind({ "ctrl" }, "u", function()
+            hs.hotkey.bind({ config.Key.CTRL }, "u", function()
                 hs.eventtap.keyStroke({ "alt", "cmd" }, "u", 0)
             end),
 
-            hs.hotkey.bind({ "ctrl", "shift" }, "i", function()
+            hs.hotkey.bind({ config.Key.CTRL, config.Key.SHIFT }, "i", function()
                 hs.eventtap.keyStroke({ "alt", "cmd" }, "i", 0)
             end),
 
@@ -50,26 +52,23 @@ function safari.setupSafariHotkeys(app, state)
                 hs.eventtap.keyStroke({ "cmd" }, "r", 0)
             end),
 
-            hs.hotkey.bind({ "ctrl" }, "r", function()
-                hs.eventtap.keyStroke({ "cmd" }, "r", 0)
-            end),
-
             -- Atualização forçada (limpa cache)
-            hs.hotkey.bind({ "ctrl" }, "f5", function()
+            hs.hotkey.bind({ config.Key.CTRL }, "f5", function()
                 hs.eventtap.keyStroke({ "alt", "cmd" }, "e", 0)
                 hs.eventtap.keyStroke({ "cmd" }, "r", 0)
             end),
 
-            hs.hotkey.bind({ "ctrl", "shift" }, "r", function()
+            hs.hotkey.bind({ config.Key.CTRL, config.Key.SHIFT }, "r", function()
                 hs.eventtap.keyStroke({ "alt", "cmd" }, "e", 0)
                 hs.eventtap.keyStroke({ "cmd" }, "r", 0)
             end),
 
-            hs.hotkey.bind({ "ctrl" }, "d", function()
+            -- Salva favorito diretamente no Raindrop.io
+            hs.hotkey.bind({ "cmd" }, "d", function()
                 hs.eventtap.keyStroke({ "shift", "cmd" }, "s", 0)
             end),
 
-            hs.hotkey.bind({ "ctrl", "shift" }, "c", function()
+            hs.hotkey.bind({ config.Key.CTRL, config.Key.SHIFT }, "c", function()
                 -- Salva o conteúdo atual da área de transferência para restaurar depois
                 local originalClipboard = hs.pasteboard.getContents()
 
@@ -128,7 +127,7 @@ function safari.setupSafariHotkeys(app, state)
 end
 
 -- Limpar atalhos do Safari
-function safari.clearSafariHotkeys(state)
+function safari.clearHotkeys(state)
     if state.safariHotkeys then
         for _, hotkey in pairs(state.safariHotkeys) do
             if hotkey and type(hotkey.delete) == "function" then

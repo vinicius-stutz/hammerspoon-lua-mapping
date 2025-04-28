@@ -22,20 +22,20 @@ end
 
 -- Configurar atalhos de sistema
 function keyboard.setupSystemShortcuts()
-    -- Fechar aplicação (Alt+F4 -> Cmd+F4)
-    hs.hotkey.bind({"cmd"}, "f4", nil, function()
+    -- Fechar aplicação
+    hs.hotkey.bind({ config.Key.ALT }, config.Key.F4, nil, function()
         local app = hs.application.frontmostApplication()
         if app then app:kill() end
     end)
-    
-    -- Fechar aba/janela (Ctrl+F4)
-    hs.hotkey.bind({"ctrl"}, "f4", nil, function()
+
+    -- Fechar aba/janela
+    hs.hotkey.bind({ config.Key.CTRL }, config.Key.F4, nil, function()
         local win = hs.window.focusedWindow()
         if not win then return end
-        
+
         local app = win:application()
         local appName = app:name()
-        
+
         -- Lista de aplicativos que sabemos usar abas
         local tabApps = {
             ["Google Chrome"] = true,
@@ -47,16 +47,16 @@ function keyboard.setupSystemShortcuts()
             ["Visual Studio Code"] = true,
             ["Sublime Text"] = true
         }
-        
+
         -- Lista de aplicativos onde precisamos ser cuidadosos
         local sensitiveApps = {
             ["TextEdit"] = true,
             ["Microsoft Word"] = true
         }
-        
+
         if tabApps[appName] then
             -- Para navegadores e aplicativos que sabemos que usam abas
-            hs.eventtap.keyStroke({"cmd"}, "w")
+            hs.eventtap.keyStroke({ "cmd" }, "w")
         elseif sensitiveApps[appName] then
             -- Para aplicativos sensíveis, perguntamos antes
             local button = hs.dialog.blockAlert(
@@ -65,45 +65,39 @@ function keyboard.setupSystemShortcuts()
                 "Cancelar", "Fechar"
             )
             if button == "Fechar" then
-                hs.eventtap.keyStroke({"cmd"}, "w")
+                hs.eventtap.keyStroke({ "cmd" }, "w")
             end
         else
             win:close()
         end
     end)
-    -- hs.hotkey.bind({"ctrl"}, "f4", nil, function()
-    --     local win = hs.window.focusedWindow()
-    --     if win then win:close() end
-    -- end)
 
-    
-    -- Abrir Launchpad (Ctrl+Esc)
-    hs.hotkey.bind({"ctrl"}, config.KEY.ESC, function() 
-        hs.execute("open -a 'Launchpad'") 
+    -- Abrir Gerenciador de Tarefas
+    hs.hotkey.bind({ config.Key.CTRL, config.Key.SHIFT }, config.KeyCode.ESC, function()
+        hs.execute("open -a 'Activity Monitor.app'")
     end)
-    
-    -- Abrir Gerenciador de Tarefas (Ctrl+Shift+Esc)
-    hs.hotkey.bind({"ctrl", "shift"}, config.KEY.ESC, function() 
-        hs.execute("open -a 'Activity Monitor.app'") 
+
+    -- Abrir Finder
+    hs.hotkey.bind({ config.Key.START }, "f", function()
+        hs.execute("open -a 'Finder.app'")
     end)
-    
-    -- Alternar entre aplicações (Alt+Tab)
-    hs.hotkey.bind({"alt"}, "tab", function() 
-        hs.execute("open -a 'Mission Control'") 
+
+    -- Abrir Apple Mail com Ctrl+A seguido de Ctrl+M
+    hs.hotkey.bind({ config.Key.CTRL }, "a", function()
+        hs.hotkey.bind({ config.Key.CTRL }, "m", function()
+            hs.execute("open -a 'Mail.app'")
+        end):enable()
+    end, function()
+        hs.hotkey.disableAll({ config.Key.CTRL }, "m")
     end)
-    
-    -- Abrir Finder (Alt+F)
-    hs.hotkey.bind({"alt"}, "f", function() 
-        hs.execute("open -a 'Finder.app'") 
-    end)
-    
-    -- Foco no menu principal (Alt+Space)
-    hs.hotkey.bind({"alt"}, "space", function()
+
+    -- Foco no menu principal
+    hs.hotkey.bind({ config.Key.ALT }, config.Key.ESC, function()
         local currentApp = hs.application.frontmostApplication()
         if currentApp then
             local menuItems = currentApp:getMenuItems()
             if menuItems and #menuItems > 0 then
-                currentApp:selectMenuItem({menuItems[1].AXTitle})
+                currentApp:selectMenuItem({ menuItems[1].AXTitle })
             end
         end
     end)
@@ -112,69 +106,56 @@ end
 -- Criar todos os atalhos de teclado
 function keyboard.createShortcuts()
     keyboard.setupSystemShortcuts()
-    
+
     -- Teclas a desabilitar
     local disableKeys = {
-        {{"cmd"}, "q"}
+        { { "cmd" }, "q" }
     }
 
-    -- Remapeamento Ctrl para Cmd
-    local ctrlToCmd = {
-        "z", "x", "v", "c", "o", "s", "f", "a", "p", "l", "t"
-    }
-
-    -- Casos especiais
+    -- Combinações para casos especiais
     local specialCases = {
-        {{"ctrl"}, "y", {"cmd", "shift"}, "z"},          -- Refazer
-        {{"ctrl", "shift"}, "t", {"cmd", "shift"}, "t"}, -- Restaurar aba
-        {{"ctrl", "shift"}, "p", {"cmd", "shift"}, "p"}, -- Normalmente, abre a barra de comandos em apps
-        {{"alt"}, "l", {"cmd", "ctrl"}, "q"},            -- Bloquear tela
-        {{"ctrl"}, "d", {"cmd", "shift"}, "d"},          -- Duplicar linha
-        {{"ctrl", "shift"}, "v", {"cmd", "shift"}, "v"}  -- Colar sem formatação
+        { { config.Key.CTRL },                   "y", { "cmd", "shift" }, "z" }, -- Refazer
+        { { config.Key.START },                  "l", { "cmd", "ctrl" },  "q" }, -- Bloquear tela
+        { { config.Key.CTRL, config.Key.SHIFT }, "v", { "cmd", "shift" }, "v" }  -- Colar sem formatação
     }
 
-    -- Navegação (códigos de tecla -> atalhos Mac)
-    local navigationKeys = {
-        {config.KEY.HOME, {"cmd"}, config.KEY.LEFT},                              -- Home
-        {{"shift"}, config.KEY.HOME, {"cmd", "shift"}, config.KEY.LEFT},          -- Shift+Home
-        {config.KEY.END, {"cmd"}, config.KEY.RIGHT},                              -- End
-        {{"shift"}, config.KEY.END, {"cmd", "shift"}, config.KEY.RIGHT},          -- Shift+End
-        {{"ctrl"}, config.KEY.HOME, {"cmd"}, config.KEY.UP},                      -- Ctrl+Home
-        {{"ctrl"}, config.KEY.END, {"cmd"}, config.KEY.DOWN},                     -- Ctrl+End
-        {{"ctrl", "shift"}, config.KEY.HOME, {"cmd", "shift"}, config.KEY.UP},    -- Ctrl+Shift+Home
-        {{"ctrl", "shift"}, config.KEY.END, {"cmd", "shift"}, config.KEY.DOWN}    -- Ctrl+Shift+End
-    }
-
-    -- 1. Desabilitar teclas
-    for _, key in ipairs(disableKeys) do 
+    -- Desabilitar teclas
+    for _, key in ipairs(disableKeys) do
         hs.hotkey.bind(key[1], key[2], nil, function() return true end)
     end
 
-    -- 2. Remapear Ctrl para Cmd
-    for _, key in ipairs(ctrlToCmd) do 
-        hs.hotkey.bind({"ctrl"}, key, nil, function() 
-            fastKeyStroke({"cmd"}, key, config.keyboardEventDelay) 
+    -- Casos especiais
+    for _, map in ipairs(specialCases) do
+        hs.hotkey.bind(map[1], map[2], nil, function()
+            fastKeyStroke(map[3], map[4], config.keyboardEventDelay)
         end)
     end
+end
 
-    -- 3. Casos especiais
-    for _, map in ipairs(specialCases) do 
-        hs.hotkey.bind(map[1], map[2], nil, function() 
-            fastKeyStroke(map[3], map[4], config.keyboardEventDelay) 
-        end)
-    end
+-- Navegação (códigos de tecla -> atalhos Mac)
+function keyboard.createNavigationsShortcuts()
+    local navigationKeys = {
+        { config.KeyCode.HOME,                   { "ctrl" },          "a" },                                      -- Home
+        { { config.Key.SHIFT },                  config.KeyCode.HOME, { "ctrl", "shift" }, "a" },                 -- Shift+Home
+        { config.KeyCode.END,                    { "ctrl" },          "e" },                                      -- End
+        { { config.Key.SHIFT },                  config.KeyCode.END,  { "ctrl", "shift" }, "e" },                 -- Shift+End
+        { { config.Key.CTRL },                   config.KeyCode.HOME, { "cmd" },           config.KeyCode.UP },   -- Ctrl+Home
+        { { config.Key.CTRL },                   config.KeyCode.END,  { "cmd" },           config.KeyCode.DOWN }, -- Ctrl+End
+        { { config.Key.CTRL, config.Key.SHIFT }, config.KeyCode.HOME, { "cmd", "shift" },  config.KeyCode.UP },   -- Ctrl+Shift+Home
+        { { config.Key.CTRL, config.Key.SHIFT }, config.KeyCode.END,  { "cmd", "shift" },  config.KeyCode.DOWN }  -- Ctrl+Shift+End
+    }
 
-    -- 4. Teclas de navegação
+    -- Teclas de navegação
     for _, nav in ipairs(navigationKeys) do
         if type(nav[1]) == "table" then
             -- Com modificadores (shift)
-            hs.hotkey.bind(nav[1], nav[2], nil, function() 
-                fastKeyStroke(nav[3], nav[4], config.keyboardEventDelay) 
+            hs.hotkey.bind(nav[1], nav[2], nil, function()
+                fastKeyStroke(nav[3], nav[4], config.keyboardEventDelay)
             end)
         else
             -- Sem modificadores
-            hs.hotkey.bind({}, nav[1], nil, function() 
-                fastKeyStroke(nav[2], nav[3], config.keyboardEventDelay) 
+            hs.hotkey.bind({}, nav[1], nil, function()
+                fastKeyStroke(nav[2], nav[3], config.keyboardEventDelay)
             end)
         end
     end
@@ -182,29 +163,29 @@ end
 
 -- Configurar monitoramento de Ctrl+setas
 function keyboard.setupCtrlArrowWatcher()
-    ctrlArrowWatcher = hs.eventtap.new({types.keyDown}, function(event)
+    ctrlArrowWatcher = hs.eventtap.new({ types.keyDown }, function(event)
         local keyCode = event:getKeyCode()
         local flags = event:getFlags()
-        
+
         -- Verifica se é Ctrl+seta
-        if (keyCode == config.KEY.LEFT or keyCode == config.KEY.RIGHT) and flags.ctrl then
+        if (keyCode == config.KeyCode.LEFT or keyCode == config.KeyCode.RIGHT) and flags.cmd then
             -- Prepara modificadores
-            local newModifiers = {"alt"}
+            local newModifiers = { "alt" }
             if flags.shift then table.insert(newModifiers, "shift") end
-            
+
             -- Dispara tecla com Alt em vez de Ctrl
-            fastKeyStroke(newModifiers, config.keyMapping[keyCode], 0)
+            fastKeyStroke(newModifiers, config.KeyMapping[keyCode], 0)
             return true
         end
-        
+
         return false
     end)
-    
+
     ctrlArrowWatcher:start()
-    
+
     -- Armazenar referência global
     _G.ctrlArrowWatcher = ctrlArrowWatcher
-    
+
     return ctrlArrowWatcher
 end
 

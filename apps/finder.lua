@@ -10,12 +10,12 @@ local config = require("config")
 local types = hs.eventtap.event.types
 
 -- Processa eventos do Finder
-function finder.handleFinderEvents(appName, eventType, app, state)
+function finder.handleEvents(appName, eventType, app, state)
     if eventType == hs.application.watcher.activated then
         -- Verificar se o appName é "Finder" e se há uma janela do Finder em primeiro plano
         if appName == "Finder" and app:focusedWindow() then
-            -- Iniciar watcher de teclado do Finder
-            finder.setupFinderKeyboardWatcher(app, state)
+            print("-- Iniciando watcher de teclado do " .. appName)
+            finder.setupKeyboardWatcher(app, state)
         end
     elseif eventType == hs.application.watcher.deactivated then
         -- Parar watcher quando o Finder é desativado
@@ -24,20 +24,21 @@ function finder.handleFinderEvents(appName, eventType, app, state)
             state.keyboardWatcher = nil
         end
         state.isRenaming = false
+        print("-- O " .. appName .. " foi desativado")
     end
 end
 
 -- Configurar monitoramento de teclado no Finder
-function finder.setupFinderKeyboardWatcher(app, state)
+function finder.setupKeyboardWatcher(app, state)
     if not state.keyboardWatcher then
         state.keyboardWatcher = hs.eventtap.new({ types.keyDown }, function(event)
             local keyCode = event:getKeyCode()
 
-            if keyCode == config.KEY.F2 then -- F2 (Renomear)
+            if keyCode == config.KeyCode.F2 then -- F2 (Renomear)
                 state.isRenaming = true
                 app:selectMenuItem({ "Arquivo", "Renomear" })
                 return true
-            elseif keyCode == config.KEY.ENTER then -- ENTER/RETURN
+            elseif keyCode == config.KeyCode.ENTER then -- ENTER/RETURN
                 if not state.isRenaming then
                     hs.eventtap.keyStroke({ "cmd" }, "o", 0)
                     return true
@@ -45,7 +46,7 @@ function finder.setupFinderKeyboardWatcher(app, state)
                     state.isRenaming = false
                     return false
                 end
-            elseif keyCode == config.KEY.FORWARD_DELETE then -- DELETE
+            elseif keyCode == config.KeyCode.FORWARD_DELETE then -- DELETE
                 if not state.isRenaming then
                     hs.eventtap.keyStroke({ "cmd" }, "delete", 0)
                     return true

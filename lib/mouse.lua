@@ -20,31 +20,26 @@ function mouse.startModifierSwap()
     if mouse.modifierSwapTap then
         return
     end
-    
+
     -- Cria um eventtap que vai monitorar os cliques do mouse
-    mouse.modifierSwapTap = eventtap.new({eventTypes.leftMouseDown, eventTypes.leftMouseUp}, function(event)
+    mouse.modifierSwapTap = eventtap.new({ eventTypes.leftMouseDown, eventTypes.leftMouseUp }, function(event)
         -- Captura as flags atuais do evento
         local flags = event:getFlags()
-        
-        -- Caso 1: CTRL está pressionado, converte para CMD
-        if flags.ctrl and not flags.cmd then
-            flags.ctrl = nil
-            flags.cmd = true
-            event:setFlags(flags)
-        -- Caso 2: CMD está pressionado, converte para CTRL
-        elseif flags.cmd and not flags.ctrl then
-            flags.cmd = nil
+
+        -- ALT está pressionado, converte para CTRL
+        if flags.alt and not flags.ctrl then
+            flags.alt = nil
             flags.ctrl = true
             event:setFlags(flags)
         end
-        
+
         -- Permite que o evento continue
         return false
     end)
-    
+
     -- Ativa o eventtap
     mouse.modifierSwapTap:start()
-    
+
     return true
 end
 

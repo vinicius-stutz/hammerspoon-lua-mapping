@@ -7,29 +7,64 @@
 
 local config = {}
 
+-- Se você tiver invertido nas configurações conforme arquivo README
+config.Key = {
+    CTRL = "cmd",
+    START = "ctrl",
+    ALT = "alt",
+    SHIFT = "shift",
+    ESC = "escape",
+    F1 = "f1",
+    F2 = "f2",
+    F3 = "f3",
+    F4 = "f4",
+    F5 = "f5",
+    F6 = "f6",
+    F7 = "f7",
+    F8 = "f8",
+    F9 = "f9",
+    F10 = "f10",
+    F11 = "f11",
+    F12 = "f12",
+    TAB = "tab",
+}
+
 -- Códigos de teclas
-config.KEY = {
+config.KeyCode = {
     LEFT = 123,
     RIGHT = 124,
     UP = 126,
     DOWN = 125,
     ESC = 53,
     ENTER = 36,
+    F1 = 122,
     F2 = 120,
+    F3 = 99,
+    F4 = 118,
+    F5 = 96,
+    F6 = 97,
+    F7 = 98,
+    F8 = 100,
+    F9 = 101,
+    F10 = 109,
+    F11 = 103,
+    F12 = 111,
     HOME = 115,
     END = 119,
-    FORWARD_DELETE = 117
+    FORWARD_DELETE = 117,
+    PAGEUP = 116,
+    PAGEDOWN = 121
 }
 
 -- Mapeamento de códigos para nomes de teclas
-config.keyMapping = {
-    [config.KEY.LEFT] = "left",
-    [config.KEY.RIGHT] = "right",
-    [config.KEY.UP] = "up",
-    [config.KEY.DOWN] = "down"
+config.KeyMapping = {
+    [config.KeyCode.LEFT] = "left",
+    [config.KeyCode.RIGHT] = "right",
+    [config.KeyCode.UP] = "up",
+    [config.KeyCode.DOWN] = "down"
 }
 
-config.alertStyle = {
+config.AlertStyle = {
     strokeWidth     = 0.12,
     strokeColor     = { white = 1, alpha = 1 },
     fillColor       = { white = 0.12, alpha = 0.8 },

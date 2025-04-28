@@ -10,23 +10,40 @@ local window = {}
 
 -- Configurações de atalhos para janelas
 local windowBindings = {
-    { { "alt" },        "left",  "half-left" },
-    { { "alt" },        "right", "half-right" },
-    { { "alt" },        "up",    "maximize" },
-    { { "alt" },        "down",  "minimize" },
-    { { "alt", "cmd" }, "left",  "move-left" },
-    { { "alt", "cmd" }, "right", "move-right" }
+    { { config.Key.START },                   "left",  "half-left" },
+    { { config.Key.START },                   "right", "half-right" },
+    { { config.Key.START },                   "up",    "maximize" },
+    { { config.Key.START },                   "down",  "minimize" },
+    { { config.Key.START, config.Key.SHIFT }, "left",  "move-left" },
+    { { config.Key.START, config.Key.SHIFT }, "right", "move-right" }
 }
 
 -- Mostrar desktop
 function window.setupDesktopShortcut()
-    hs.hotkey.bind({ "alt" }, "d", nil, function()
+    print("-- Configurando atalho para mostrar área de trabalho…")
+    hs.hotkey.bind({ config.Key.START }, "d", nil, function()
         local allWindows = hs.window.visibleWindows()
         for _, win in ipairs(allWindows) do
             win:minimize()
         end
-        hs.alert.show("Mostrando área de trabalho…", config.alertStyle, 2)
+        hs.alert.show("Mostrando área de trabalho…", config.AlertStyle, 2)
     end)
+end
+
+-- Configurar atalho para alternar entre abas como CTRL+TAB
+function window.setupCtrlTab()
+    local cmdTabWatcher = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+        local keyCode = event:getKeyCode()
+        local mods = event:getFlags()
+
+        if keyCode == hs.keycodes.map["tab"] and mods.cmd and not mods.alt and not mods.ctrl and not mods.shift then
+            hs.eventtap.keyStroke({ "ctrl" }, "tab", 0)
+            return true -- tenta bloquear, mas pode não funcionar com CMD+TAB
+        end
+        return false
+    end)
+
+    cmdTabWatcher:start()
 end
 
 -- Função para movimentar janelas
@@ -67,12 +84,68 @@ end
 function window.setupWindowBindings()
     window.setupDesktopShortcut()
 
-    -- Atalhos para movimentação e redimensionamento
-    for _, bind in ipairs(windowBindings) do
-        hs.hotkey.bind(bind[1], bind[2], nil, function()
-            window.moveWindow(bind[3])
-        end)
+    -- Parar qualquer eventtap anterior se existir
+    if window.keyWatcher then
+        window.keyWatcher:stop()
     end
+
+    -- Criar um eventtap para capturar todas as teclas de seta
+    window.keyWatcher = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+        local keyCode = event:getKeyCode()
+        local flags = event:getFlags()
+
+        -- Para cada configuração de atalho
+        for _, bind in ipairs(windowBindings) do
+            -- Obter nome da tecla atual
+            local currentKey = nil
+            for name, code in pairs(hs.keycodes.map) do
+                if code == keyCode then
+                    currentKey = name
+                    break
+                end
+            end
+
+            -- Se não é uma tecla de seta que estamos monitorando, ignore
+            if currentKey ~= bind[2] then
+                goto continue
+            end
+
+            -- Verificar os modificadores
+            local modifiersMatch = true
+
+            if hs.fnutils.contains(bind[1], config.Key.START) then
+                if not flags.ctrl then
+                    modifiersMatch = false
+                end
+            else
+                if flags.ctrl then
+                    modifiersMatch = false
+                end
+            end
+
+            if hs.fnutils.contains(bind[1], config.Key.SHIFT) then
+                if not flags.shift then
+                    modifiersMatch = false
+                end
+            else
+                if flags.shift then
+                    modifiersMatch = false
+                end
+            end
+
+            if modifiersMatch then
+                window.moveWindow(bind[3])
+                return true
+            end
+
+            ::continue::
+        end
+
+        return false
+    end)
+
+    -- Iniciar o watcher
+    window.keyWatcher:start()
 end
 
 return window
