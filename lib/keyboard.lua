@@ -116,7 +116,8 @@ function keyboard.createShortcuts()
     local specialCases = {
         { { config.Key.CTRL },                   "y", { "cmd", "shift" }, "z" }, -- Refazer
         { { config.Key.START },                  "l", { "cmd", "ctrl" },  "q" }, -- Bloquear tela
-        { { config.Key.CTRL, config.Key.SHIFT }, "v", { "cmd", "shift" }, "v" }  -- Colar sem formatação
+        { { config.Key.CTRL, config.Key.SHIFT }, "v", { "cmd", "shift" }, "v" }, -- Colar sem formatação
+        { { config.Key.ALT, config.Key.SHIFT },  "d", { "cmd", "ctrl" },  "d" }  -- Definição de palavra
     }
 
     -- Desabilitar teclas

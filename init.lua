@@ -61,7 +61,7 @@ local function applicationWatcher(appName, eventType, app)
         safari.handleEvents(appName, eventType, app, state)
     elseif appName == "Mail" then
         mail.handleEvents(appName, eventType, app, state)
-    elseif appName == "Code" or appName == "Rider" then
+    elseif appName == "Code" or appName == "JetBrains Rider" then
         ide.handleEvents(appName, eventType, app, state)
     end
 end
