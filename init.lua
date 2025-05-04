@@ -76,13 +76,7 @@ local function init()
     keyboard.createNavigationsShortcuts()
 
     print("-- Iniciando watcher de teclas CTRL+Setas…")
-    keyboard.setupCtrlArrowWatcher()
-
-    print("-- Configurando atalhos de janela…")
-    window.setupWindowBindings()
-
-    print("-- Configurando uso do CTRL+TAB nas aplicações com abas…")
-    window.setupCtrlTab()
+    keyboard.setupKeysWatcher()
 
     -- Descomente as linha abaixo caso não use CMD no lugar de CTRL nas configurações
     --print("-- Iniciando o swapper automaticamente quando o módulo de mouse é carregado…")

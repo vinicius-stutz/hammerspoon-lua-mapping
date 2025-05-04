@@ -53,8 +53,8 @@ Mapeamentos por fora do _Hammerspoon_ (apenas dicas):
 - AltTab.app => ⌥+TAB
 - Ajustes do Sistema (primeiro desative todos os atalhos e depois…)
   - Mostrar Launchpad => ^+Espaço
-  - Mission Control => ^+TAB
-  - Janelas do aplicativo => ^+Shift+TAB
+  - Mission Control => recomendável limpar e desativar
+  - Janelas do aplicativo => recomendável limpar e desativar
   - Mover o foco para o Dock => ⌘+ESC
   - Atalhos de Apps
     - Todos os Aplicativos

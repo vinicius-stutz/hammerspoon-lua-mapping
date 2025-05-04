@@ -7,8 +7,9 @@
 
 local keyboard = {}
 local config = require("config")
+local window = require("lib.window")
 local types = hs.eventtap.event.types
-local ctrlArrowWatcher = nil
+local keysWatcher = nil
 
 -- Cache da função de keyStroke para melhorar performance
 local fastKeyStroke = hs.eventtap.keyStroke
@@ -82,13 +83,13 @@ function keyboard.setupSystemShortcuts()
         hs.execute("open -a 'Finder.app'")
     end)
 
-    -- Abrir Apple Mail com Ctrl+A seguido de Ctrl+M
-    hs.hotkey.bind({ config.Key.CTRL }, "a", function()
-        hs.hotkey.bind({ config.Key.CTRL }, "m", function()
-            hs.execute("open -a 'Mail.app'")
-        end):enable()
-    end, function()
-        hs.hotkey.disableAll({ config.Key.CTRL }, "m")
+    -- Mostrar desktop
+    hs.hotkey.bind({ config.Key.START }, "d", nil, function()
+        local allWindows = hs.window.visibleWindows()
+        for _, win in ipairs(allWindows) do
+            win:minimize()
+        end
+        hs.alert.show("Mostrando área de trabalho…", config.AlertStyle, 2)
     end)
 
     -- Foco no menu principal
@@ -162,32 +163,89 @@ function keyboard.createNavigationsShortcuts()
     end
 end
 
--- Configurar monitoramento de Ctrl+setas
-function keyboard.setupCtrlArrowWatcher()
-    ctrlArrowWatcher = hs.eventtap.new({ types.keyDown }, function(event)
+-- Configurar monitoramento das teclas em geral
+function keyboard.setupKeysWatcher()
+    keysWatcher = hs.eventtap.new({ types.keyDown }, function(event)
         local keyCode = event:getKeyCode()
         local flags = event:getFlags()
 
-        -- Verifica se é Ctrl+seta
+        -- Verifica se é Ctrl+Seta
         if (keyCode == config.KeyCode.LEFT or keyCode == config.KeyCode.RIGHT) and flags.cmd then
-            -- Prepara modificadores
-            local newModifiers = { "alt" }
-            if flags.shift then table.insert(newModifiers, "shift") end
-
-            -- Dispara tecla com Alt em vez de Ctrl
-            fastKeyStroke(newModifiers, config.KeyMapping[keyCode], 0)
+            if flags.shift then
+                fastKeyStroke({ "alt", "shift" }, config.KeyMapping[keyCode], 0)
+            else
+                fastKeyStroke({ "alt" }, config.KeyMapping[keyCode], 0)
+            end
             return true
+        end
+
+        -- Verifica se é Ctrl+Tab
+        if keyCode == hs.keycodes.map["tab"] and flags.cmd and not flags.alt and not flags.ctrl then
+            -- Verifica se é Ctrl+Shift+Tab
+            if flags.shift then
+                fastKeyStroke({ "ctrl", "shift" }, "tab", 0)
+            else
+                fastKeyStroke({ "ctrl" }, "tab", 0)
+            end
+            return true
+        end
+
+        -- Para cada configuração de atalho
+        for _, bind in ipairs(window.Bindings) do
+            -- Obter nome da tecla atual
+            local currentKey = nil
+            for name, code in pairs(hs.keycodes.map) do
+                if code == keyCode then
+                    currentKey = name
+                    break
+                end
+            end
+
+            -- Se não é uma tecla de seta que estamos monitorando, ignore
+            if currentKey ~= bind[2] then
+                goto continue
+            end
+
+            -- Verificar os modificadores
+            local modifiersMatch = true
+
+            if hs.fnutils.contains(bind[1], config.Key.START) then
+                if not flags.ctrl then
+                    modifiersMatch = false
+                end
+            else
+                if flags.ctrl then
+                    modifiersMatch = false
+                end
+            end
+
+            if hs.fnutils.contains(bind[1], config.Key.SHIFT) then
+                if not flags.shift then
+                    modifiersMatch = false
+                end
+            else
+                if flags.shift then
+                    modifiersMatch = false
+                end
+            end
+
+            if modifiersMatch then
+                window.move(bind[3])
+                return true
+            end
+
+            ::continue::
         end
 
         return false
     end)
 
-    ctrlArrowWatcher:start()
+    keysWatcher:start()
 
     -- Armazenar referência global
-    _G.ctrlArrowWatcher = ctrlArrowWatcher
+    _G.keysWatcher = keysWatcher
 
-    return ctrlArrowWatcher
+    return keysWatcher
 end
 
 return keyboard

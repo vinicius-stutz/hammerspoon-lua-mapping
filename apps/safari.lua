@@ -63,7 +63,7 @@ function safari.setupHotkeys(app, state)
                 hs.eventtap.keyStroke({ "cmd" }, "r", 0)
             end),
 
-            -- Salva favorito diretamente no Raindrop.io
+            -- Salva favorito diretamente no Raindrop.io (você pode mudar para o seu gerenciador de favoritos)
             hs.hotkey.bind({ "cmd" }, "d", function()
                 hs.eventtap.keyStroke({ "shift", "cmd" }, "s", 0)
             end),
